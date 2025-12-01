@@ -77,12 +77,3 @@ func TestPartOne(t *testing.T) {
 		t.Errorf("partOne() = %d, want %d", result, expected)
 	}
 }
-
-func TestPartTwo(t *testing.T) {
-	expected := 0
-
-	result, _ := partTwo()
-	if result != expected {
-		t.Errorf("partTwo() = %d, want %d", result, expected)
-	}
-}

@@ -29,6 +29,8 @@ func main() {
 
 	p1v, p1d := partOne(r, g)
 	fmt.Printf("Part one: %d - elapsed: %s\n", p1v, p1d)
+	p2v, p2d := partTwo(r, g)
+	fmt.Printf("Part two: %d - elapsed: %s\n", p2v, p2d)
 }
 
 func processInput(in utils.Input) []*robot {
@@ -58,10 +60,20 @@ func partOne(r []*robot, g grid) (int, string) {
 	return g.safetyFactor(r), time.Since(t).String()
 }
 
-func partTwo() (int, string) {
+func partTwo(r []*robot, g grid) (int, string) {
 	t := time.Now()
 
-	return 0, time.Since(t).String()
+	for i := 0; ; i++ {
+		for _, ro := range r {
+			ro.move(g)
+		}
+
+		if g.isTreeShape(r) {
+			return i, time.Since(t).String()
+		}
+	}
+
+	return -1, time.Since(t).String()
 }
 
 func (r *robot) move(g grid) {
@@ -128,4 +140,21 @@ func (g *grid) safetyFactor(r []*robot) int {
 	}
 
 	return n
+}
+
+func (g *grid) isTreeShape(r []*robot) bool {
+	for y := 0; y < g.maxY; y++ {
+		n := 0
+		for _, ro := range r {
+			if ro.pos.y == y {
+				n++
+			}
+		}
+
+		if n >= g.midX() {
+			return true
+		}
+	}
+
+	return false
 }

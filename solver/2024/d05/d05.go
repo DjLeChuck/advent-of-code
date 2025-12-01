@@ -25,6 +25,8 @@ func main() {
 
 	p1v, p1d := partOne(r, u)
 	fmt.Printf("Part one: %d - elapsed: %s\n", p1v, p1d)
+	p2v, p2d := partTwo(r, u) // 5624 - too low
+	fmt.Printf("Part two: %d - elapsed: %s\n", p2v, p2d)
 }
 
 func processInput(in utils.Input) (rules, updates) {
@@ -85,6 +87,23 @@ func partTwo(r rules, u updates) (int, string) {
 	t := time.Now()
 	n := 0
 
+	for _, up := range u {
+		ni := len(up)
+		gi := 0
+
+		for i, v := range up {
+			if updateValueCorrect(i, v, up, r) {
+				gi++
+			}
+		}
+
+		if ni != gi {
+			reorder(up, r)
+
+			n += middlePageNumber(up)
+		}
+	}
+
 	return n, time.Since(t).String()
 }
 
@@ -119,4 +138,26 @@ func updateValueCorrect(i, v int, u update, r rules) bool {
 
 func middlePageNumber(u update) int {
 	return u[int(math.Floor(float64(len(u)/2)))]
+}
+
+func reorder(up update, r rules) {
+	fmt.Println(up)
+	cup := append(up[:0:0], up...)
+	for _, v := range up {
+		rs := grabUpdateRules(v, up, r)
+		//fmt.Println(rs)
+		for _, ru := range rs {
+			lIdx := slices.Index(up, ru.left)
+			rIdx := slices.Index(up, ru.right)
+			if ru.left == v && lIdx > rIdx {
+				cup[lIdx] = up[rIdx]
+				cup[rIdx] = up[lIdx]
+			} else if ru.right == v && rIdx < lIdx {
+				cup[lIdx] = up[rIdx]
+				cup[rIdx] = up[lIdx]
+			}
+			fmt.Println(cup)
+		}
+	}
+	fmt.Println(cup, "\n---")
 }
