@@ -1,2 +1,2 @@
 inputs/**/*.txt
-!inputs/2024/*_example.txt
+!inputs/**/*_example.txt
