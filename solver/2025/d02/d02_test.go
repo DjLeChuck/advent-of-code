@@ -42,9 +42,9 @@ func TestPartOne(t *testing.T) {
 }
 
 func TestPartTwo(t *testing.T) {
-	expected := 0
+	expected := 4174379265
 
-	result, _ := partTwo()
+	result, _ := partTwo(parsedInput)
 	if result != expected {
 		t.Errorf("partTwo() = %d, want %d", result, expected)
 	}

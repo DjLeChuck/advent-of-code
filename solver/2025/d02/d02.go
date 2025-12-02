@@ -6,6 +6,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/dlclark/regexp2"
+
 	"github.com/djlechuck/advent-of-code/utils"
 )
 
@@ -19,6 +21,8 @@ func main() {
 
 	p1v, p1d := partOne(ranges)
 	fmt.Printf("Part one: %d (%s)\n", p1v, p1d)
+	p2v, p2d := partTwo(ranges)
+	fmt.Printf("Part two: %d (%s)\n", p2v, p2d)
 }
 
 func processInput(in utils.Input) []idsRange {
@@ -70,8 +74,26 @@ func partOne(ir []idsRange) (int, string) {
 	return nb, time.Since(t).String()
 }
 
-func partTwo() (int, string) {
+func partTwo(ir []idsRange) (int, string) {
 	t := time.Now()
 
-	return 0, time.Since(t).String()
+	invalids := make(map[int]bool)
+	re := regexp2.MustCompile(`^(\d+)\1+$`, 0)
+
+	for _, ra := range ir {
+		for i := ra.min; i <= ra.max; i++ {
+			iStr := strconv.Itoa(i)
+
+			if isMatch, _ := re.MatchString(iStr); isMatch {
+				invalids[i] = true
+			}
+		}
+	}
+
+	nb := 0
+	for k := range invalids {
+		nb += k
+	}
+
+	return nb, time.Since(t).String()
 }
