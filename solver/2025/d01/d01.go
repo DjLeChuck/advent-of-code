@@ -59,6 +59,30 @@ func partOne(ins []instruction) (int, string) {
 
 func partTwo(ins []instruction) (int, string) {
 	t := time.Now()
+	dial := 50
+	nbZero := 0
+
+	for _, inst := range ins {
+		if inst.op == "L" {
+			dial -= inst.length
+		} else if inst.op == "R" {
+			dial += inst.length
+		}
+
+		nbZero += dial / 100
+
+		dial = dial % 100
+
+		if dial < 0 {
+			dial += 100
+		}
+
+		if dial == 0 {
+			nbZero++
+		}
+
+		fmt.Printf("%+v -> %d - %d\n", inst, dial, nbZero)
+	}
 
 	return 0, time.Since(t).String()
 }
