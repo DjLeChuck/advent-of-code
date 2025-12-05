@@ -40,9 +40,9 @@ func TestPartOne(t *testing.T) {
 }
 
 func TestPartTwo(t *testing.T) {
-	expected := 0
+	expected := 14
 
-	result, _ := partTwo()
+	result, _ := partTwo(parsedInputRanges)
 	if result != expected {
 		t.Errorf("partTwo() = %d, want %d", result, expected)
 	}

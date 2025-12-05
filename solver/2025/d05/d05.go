@@ -1,7 +1,9 @@
 package main
 
 import (
+	"cmp"
 	"fmt"
+	"slices"
 	"strings"
 	"time"
 
@@ -18,6 +20,8 @@ func main() {
 
 	p1v, p1d := partOne(fr, ids)
 	fmt.Printf("Part one: %d (%s)\n", p1v, p1d)
+	p2v, p2d := partTwo(fr)
+	fmt.Printf("Part two: %d (%s)\n", p2v, p2d)
 }
 
 func processInput(in utils.Input) ([]freshRange, []int) {
@@ -58,8 +62,34 @@ func partOne(fr []freshRange, ids []int) (int, string) {
 	return nbOK, time.Since(t).String()
 }
 
-func partTwo() (int, string) {
+func partTwo(fr []freshRange) (int, string) {
 	t := time.Now()
 
-	return 0, time.Since(t).String()
+	// sort ranges by starting value
+	slices.SortFunc(fr, func(a, b freshRange) int {
+		return cmp.Compare(a.start, b.start)
+	})
+
+	// merge overlapping ranges
+	var merged []freshRange
+	for _, r := range fr {
+		n := len(merged)
+		// the first range, or new one starts after the merged ends
+		if n == 0 || r.start > merged[n-1].end+1 {
+			merged = append(merged, r)
+			continue
+		}
+
+		// new range overlaps with the merged, update its end
+		if r.end > merged[n-1].end {
+			merged[n-1].end = r.end
+		}
+	}
+
+	nbOk := 0
+	for _, r := range merged {
+		nbOk += r.end - r.start + 1
+	}
+
+	return nbOk, time.Since(t).String()
 }
